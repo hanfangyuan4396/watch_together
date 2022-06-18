@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest</title>
+</head>
+<script>
+    var roomId = null
+    function onButtonClick(e) {
+        var inputValue = document.getElementById("room-id").value
+        if (inputValue === '') {
+            alert("房间号不能为空!")
+        } else if (inputValue.length > 8) {
+            alert("房间号不能超过8位!")
+        } else {
+            roomId = inputValue
+            alert("您进入的房间号为: " + roomId)
+        }
+    }
+    function onInputFileChange() {
+        if (roomId === null) {
+            alert("请先输入房间号!")
+        } else {
+            var player = document.getElementById("video-id")
+            var file = document.getElementById('file').files[0]
+            var url = URL.createObjectURL(file)
+            player.src = url;
+        }
+    }
+</script>
+<body>
+    <div align="center">
+        <h1>一起看-观众</h1>
+        <span>房间号:</span>
+        <input type="text" id="room-id">
+        <button onclick="onButtonClick()" style="background-color: greenyellow; margin-right: 80px;">确认</button>
+        <input type="file" id="file" onchange="onInputFileChange()">
+        <br>
+        <video id="video-id" style="width: 70%;margin-top: 50px;" controls autoplay></video>
+    </div>
+</body>
+<script type="module">
+    var player = document.getElementById("video-id")
+    import { getTime } from './request.js'
+    setInterval(synchronizeTime, 5000)
+    function synchronizeTime() {
+        if (roomId !== null) {
+            getTime({roomId}).then(respnse => {
+                var now = Date.now()
+                var correctTime = now - respnse.timestamp
+                var hostTime = respnse.current_time + correctTime / 1000
+                var deltaTime = hostTime - player.currentTime
+                if (deltaTime<=-2 && deltaTime>=-10) {
+                    player.playbackRate = 0.8
+                } else if (deltaTime>=2 && deltaTime<=10) {
+                    player.playbackRate = 1.2
+                } else if (deltaTime<-10 || deltaTime>10) {
+                    player.currentTime = hostTime
+                } else {
+                    player.playbackRate = 1
+                }
+                console.log(respnse, deltaTime)
+            })
+        }
+    }
+    </script>
+</html>

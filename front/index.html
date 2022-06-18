@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Together</title>
+</head>
+<body>
+    <div align="center">
+        <h1>一起看</h1>
+        <img src="watch_together.png" width="50%" alt=""><br>
+        <button onclick="goHost()" style="background-color: deepskyblue;">我是主播</button>
+        <button onclick="goGuest()" style="background-color: greenyellow; margin-left: 50px;">我是观众</button>
+    </div>
+</body>
+<script>
+    function goHost() {
+        window.location.assign('host.html')
+    }
+    function goGuest() {
+        window.location.assign('guest.html')
+    }
+</script>
+</html>
